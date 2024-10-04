@@ -1,0 +1,18 @@
+[packages]
+black = "*"
+flake8 = "*"
+ipython = "*"
+isort = "*"
+jupyterlab = "*"
+matplotlib = "*"
+mkdocs = "*"
+notebook = "*"
+numpy = "*"
+pandas = "*"
+pip = "*"
+python-dotenv = "*"
+scikit-learn = "*"
+"tec_mlops_project" ={editable = true, path = "."}
+
+[requires]
+python_version = "3.12"
