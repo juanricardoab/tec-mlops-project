@@ -4,6 +4,7 @@ import seaborn as sns
 from datetime import datetime as dt
 
 from dataExplorer import DataExplorer
+from preprocessData import PreprocessData
 
 class BikeSharingModel:
     def __init__(self, fileNumber):
@@ -32,7 +33,20 @@ class BikeSharingModel:
         return self
 
     def preprocess_data(self):
+        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned, 'season')
+        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'mnth')
+        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'hr')
+        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'holiday')
+        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'weekday')
+        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'workingday')
+        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'weathersit')
         
+        PreprocessData.min_max_scaler(self.data_cleaned_oneHot)
+        self.X = self.data_cleaned_oneHot.drop(columns=['cnt'])
+        self.y = self.data_cleaned_oneHot['cnt']
+        #save X and y to csv
+        self.X.to_csv('../data/processed/X.csv', index=False)
+        self.y.to_csv('../data/processed/y.csv', index=False)
         return self
     
     def train_model(self):
