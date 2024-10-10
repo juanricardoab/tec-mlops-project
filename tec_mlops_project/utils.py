@@ -30,10 +30,6 @@ def get_regresion_model():
     return LinearRegression(fit_intercept=True)
 
 
-def save_model(model, path):
-    pass
-
-
 def evaluate_model(model, X_train, X_test, y_train, y_test, y_pred):
     y_t = np.square(y_test)
     y_p = np.square(y_pred)
