@@ -1,6 +1,7 @@
 
 # Main function for running the pipeline
 from bikeSharingModel import BikeSharingModel
+import yaml
 
 ## Execute BikeSharingModel
 #  @Param fileNumber int
@@ -14,4 +15,6 @@ def main(fileNumber):
     model.cross_validate_model()
     
 if __name__ == "__main__":
-    main(275)
+    with open("./params.yaml") as conf_file:
+        config = yaml.safe_load(conf_file)
+    main(config['data_load']['fileNumber'])
