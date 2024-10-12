@@ -33,21 +33,28 @@ class BikeSharingModel:
         return self
 
     def preprocess_data(self):
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned, 'season')
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'mnth')
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'hr')
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'holiday')
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'weekday')
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'workingday')
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, 'weathersit')
+        columns_to_encode = ['season', 'mnth', 'hr', 'holiday', 'weekday', 'workingday', 'weathersit']
         
+        # Aplicar one-hot encoding a las columnas en una sola iteración
+        for column in columns_to_encode:
+            self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(self.data_cleaned_oneHot, column)
+        
+        # Aplicar el escalado
         PreprocessData.min_max_scaler(self.data_cleaned_oneHot)
+        
+        # Separar las características (X) y el objetivo (y)
         self.X = self.data_cleaned_oneHot.drop(columns=['cnt'])
         self.y = self.data_cleaned_oneHot['cnt']
-        #save X and y to csv
-        self.X.to_csv('../data/processed/X.csv', index=False)
-        self.y.to_csv('../data/processed/y.csv', index=False)
+        
+        # Guardar en CSV (esto podría ser modularizado si deseas reutilizar la lógica)
+        self._save_to_csv(self.X, self.y)
+        
         return self
+
+    def _save_to_csv(self, X, y):
+        """Guarda las variables X e y en archivos CSV."""
+        X.to_csv('../data/processed/X.csv', index=False)
+        y.to_csv('../data/processed/y.csv', index=False)
     
     def train_model(self):
 
