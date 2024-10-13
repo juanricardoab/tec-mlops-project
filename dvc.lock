@@ -12,3 +12,66 @@ stages:
         base:
           seed: 42
           fileNumber: 275
+  data_clean:
+    cmd: python src/stages/data_clean.py --config=params.yaml
+    deps:
+    - path: data/raw/bike.csv
+      hash: md5
+      md5: e9c213554af44ce7c6c4aba4b549fa85
+      size: 1237473
+    - path: src/stages/data_clean.py
+      hash: md5
+      md5: 145f809ade590f6bb03c32455441bb35
+      size: 1339
+    params:
+      params.yaml:
+        data_load:
+          day_csv: data/raw/day.csv
+          hour_csv: data/raw/hour.csv
+          bike_csv: data/raw/bike.csv
+          continuous_variable:
+          - temp
+          - atemp
+          - hum
+          - windspeed
+          - casual
+          - registered
+          categorical_variable:
+          - season
+          - yr
+          - mnth
+          - hr
+          - holiday
+          - weekday
+          - workingday
+          - weathersit
+          dependent_variable:
+          - cnt
+    outs:
+    - path: data/processed/bike_cleaned.csv
+      hash: md5
+      md5: bef1c8af5056d4c9f1d87882114f4848
+      size: 1046296
+  preprocess:
+    cmd: python src/stages/preprocess.py --config=params.yaml
+    deps:
+    - path: src/stages/data_clean.py
+      hash: md5
+      md5: 145f809ade590f6bb03c32455441bb35
+      size: 1339
+    params:
+      params.yaml:
+        data_clean:
+          clean_csv: data/processed/bike_cleaned.csv
+        preprocess:
+          x: data/processed/X.csv
+          y: data/processed/y.csv
+    outs:
+    - path: data/processed/X.csv
+      hash: md5
+      md5: ff08fa379eeaecc9afc803f0868b9295
+      size: 727696
+    - path: data/processed/y.csv
+      hash: md5
+      md5: 45bd8d3b65dd086cec3b3dc47e1f6a7e
+      size: 60685
