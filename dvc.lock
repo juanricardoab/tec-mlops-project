@@ -102,11 +102,75 @@ stages:
           x: data/processed/X.csv
           y: data/processed/y.csv
     outs:
+    - path: data/processed/x_test.csv
+      hash: md5
+      md5: 7dc589e0f17ac0500ea8a99e48c096ad
+      size: 627596
     - path: data/processed/x_train.csv
       hash: md5
       md5: e5e0d7af203ef3864ab0e46230263f80
       size: 2516613
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: 8b7337b64737951ca951cbf229cec6de
+      size: 79156
     - path: data/processed/y_train.csv
       hash: md5
       md5: f616e74f9da79368f275aa0353d6248a
       size: 316007
+  train:
+    cmd: python src/stages/train.py --config=params.yaml
+    deps:
+    - path: data/processed/x_test.csv
+      hash: md5
+      md5: 7dc589e0f17ac0500ea8a99e48c096ad
+      size: 627596
+    - path: data/processed/x_train.csv
+      hash: md5
+      md5: e5e0d7af203ef3864ab0e46230263f80
+      size: 2516613
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: 8b7337b64737951ca951cbf229cec6de
+      size: 79156
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: f616e74f9da79368f275aa0353d6248a
+      size: 316007
+    params:
+      params.yaml:
+        data_split:
+          test_size: 0.2
+          x_train: data/processed/x_train.csv
+          y_train: data/processed/y_train.csv
+          x_test: data/processed/x_test.csv
+          y_test: data/processed/y_test.csv
+        train:
+          cv: 3
+          estimator_name: logreg
+          estimators:
+            logreg:
+              param_grid:
+                C:
+                - 0.001
+                max_iter:
+                - 100
+                solver:
+                - lbfgs
+                multi_class:
+                - multinomial
+            svm:
+              param_grid:
+                C:
+                - 0.1
+                - 1.0
+                kernel:
+                - rbf
+                - linear
+                gamma:
+                - scale
+                degree:
+                - 3
+                - 5
+          y_pred: data/processed/y_pred.csv
+          model_path: models/lin_reg_model.pkl.joblib
