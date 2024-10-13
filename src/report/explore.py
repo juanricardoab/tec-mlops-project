@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-
+import argparse
+import yaml 
 
 class DataExplorer:
     @staticmethod
@@ -48,6 +49,7 @@ class DataExplorer:
         plt.title("registered")
         plt.tight_layout()
         plt.show()
+       
         
         #Categorical variables
         plt.figure(figsize=(12,8))
@@ -78,27 +80,30 @@ class DataExplorer:
         plt.tight_layout()
         plt.show()
         
+        
     @staticmethod
     def plot_distribution_graphs(data):
         # Visualization code for distribution of target variable
         plt.figure(figsize=(8,6))
-        sns.distplot(data['cnt'])
+        sns.displot(data['cnt'])
         plt.xlabel("Rented Bike Count")
         plt.title('Distribution Plot of Rented Bike Count')
         plt.show()
         
+
         for col in data.describe().columns:
             fig,axes = plt.subplots(nrows=1,ncols=2,figsize=(13,4))
             sns.histplot(data[col], ax = axes[0],kde = True)
             sns.boxplot(data[col], ax = axes[1],orient='h',showmeans=True,color='pink')
             fig.suptitle("Distribution plot of "+ col, fontsize = 12)
             plt.show()
-
+        
     @staticmethod
     def plot_correlation_matrix(data):
         plt.figure(figsize=(12,8))
         dfCorrelation = data.corr(method='pearson')
         sns.heatmap(round(dfCorrelation,2), annot=True)
+        
         
     @staticmethod
     def plot_correlation_graphs(data, continuous_variables, dependent_variable, categorical_variables):
@@ -110,6 +115,7 @@ class DataExplorer:
             plt.xlabel(i)
             plt.title(i+' vs '+ dependent_variable[0])
             plt.show()
+        
             
         # Analyzing the relationship between the dependent variable and the categorical variables
         for i in categorical_variables:
@@ -119,6 +125,7 @@ class DataExplorer:
             plt.xlabel(i)
             plt.title(i+' vs '+ dependent_variable[0])
             plt.show()
+        
             
     @staticmethod
     def plot_average_rent_over_time(data):
@@ -131,10 +138,32 @@ class DataExplorer:
         plt.ylabel("Rented Bike Count")
         plt.xlabel("Hour")
         plt.title('Average bike rented per hour')
+        plt.savefig('reports/figures/average_rent_over_time.png', bbox_inches='tight')
         plt.show()
 
-    @staticmethod
-    def final_changes_format_data(data):
-        #Eliminando la variable atemp
-        data = data.drop(columns=['atemp'])
-        data = data.drop(columns=['yr'])
+def data_explorer(config_path)-> None:
+    config = yaml.safe_load(open(config_path))
+    data_cleaned = pd.read_csv((config['data_clean']['clean_csv']))
+    continuous_variable = config['data_load']['continuous_variable']
+    dependent_variable = config['data_load']['dependent_variable']
+    categorical_variable = config['data_load']['categorical_variable']
+
+    DataExplorer.explore_data(data_cleaned)
+    DataExplorer.plot_histograms(data_cleaned)
+    DataExplorer.plot_distribution_graphs(data_cleaned)
+    DataExplorer.plot_correlation_matrix(data_cleaned)
+    DataExplorer.plot_correlation_graphs(data_cleaned, continuous_variable, 
+                                         dependent_variable, categorical_variable)
+    DataExplorer.plot_average_rent_over_time(data_cleaned)
+
+
+if __name__=='__main__':
+
+    args_parser = argparse.ArgumentParser()
+    args_parser.add_argument('--config', dest='config', required=True)
+    args = args_parser.parse_args()
+
+    data_explorer(config_path=args.config)
+        
+
+  

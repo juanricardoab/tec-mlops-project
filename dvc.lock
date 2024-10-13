@@ -1,0 +1,14 @@
+schema: '2.0'
+stages:
+  data_load:
+    cmd: python src/stages/data_load.py --config=params.yaml
+    deps:
+    - path: src/stages/data_load.py
+      hash: md5
+      md5: 8e570e18e3d6bd6bf9bf8ffc524952d2
+      size: 726
+    params:
+      params.yaml:
+        base:
+          seed: 42
+          fileNumber: 275
