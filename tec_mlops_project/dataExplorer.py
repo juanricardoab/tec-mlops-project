@@ -24,58 +24,37 @@ class DataExplorer:
         return data_cleaned
     
     @staticmethod
-    def plot_histograms(data):
-        #Histogramas de las variables cuantitativas
-        plt.figure(figsize=(12,6))
-        plt.subplot(3, 2, 1)
-        data['temp'].hist(bins=30) 
-        plt.title("temp")
-        plt.subplot(3, 2, 2)
-        data['atemp'].hist(bins=30) 
-        plt.title("atemp")
-        plt.subplot(3, 2, 3)
-        data['hum'].hist(bins=30) 
-        plt.title("hum")
-        plt.subplot(3, 2, 4)
-        data['windspeed'].hist(bins=30) 
-        plt.title("winspeed")
-        plt.subplot(3, 2, 5)
-        data['casual'].hist(bins=30) 
-        plt.title("casual")
-        plt.subplot(3, 2, 6)
-        data['registered'].hist(bins=30) 
-        plt.title("registered")
+    def _plot_quantitative_histograms(data, vars_list):
+        """Función para graficar histogramas de variables cuantitativas."""
+        plt.figure(figsize=(12, 8))
+        for i, var in enumerate(vars_list, 1):
+            plt.subplot((len(vars_list) + 1) // 2, 2, i)  # Ajusta dinámicamente las filas
+            data[var].hist(bins=30)
+            plt.title(var)
+        plt.tight_layout()
+        plt.show()
+    @staticmethod
+    def _plot_categorical_countplots(data, vars_list):
+        """Función para graficar countplots de variables categóricas."""
+        plt.figure(figsize=(12, 10))
+        for i, var in enumerate(vars_list, 1):
+            plt.subplot((len(vars_list) + 1) // 2, 2, i)  # Ajusta dinámicamente las filas
+            sns.countplot(x=var, data=data)
+            plt.title(var)
         plt.tight_layout()
         plt.show()
         
-        #Categorical variables
-        plt.figure(figsize=(12,8))
-        plt.subplot(4, 2, 1)
-        sns.countplot(x='season',data=data)
-        plt.title("season")
-        plt.subplot(4, 2, 2)
-        sns.countplot(x='yr',data=data)
-        plt.title("year")
-        plt.subplot(4, 2, 3)
-        sns.countplot(x='mnth',data=data)
-        plt.title("month")
-        plt.subplot(4, 2, 4)
-        sns.countplot(x='hr',data=data)
-        plt.title("hour")
-        plt.subplot(4, 2, 5)
-        sns.countplot(x='holiday',data=data)
-        plt.title("holiday")
-        plt.subplot(4, 2, 6)
-        sns.countplot(x='weekday',data=data)
-        plt.title("weekday")
-        plt.subplot(4, 2, 7)
-        sns.countplot(x='workingday',data=data)
-        plt.title("workingday")
-        plt.subplot(4, 2, 8)
-        sns.countplot(x='weathersit',data=data)
-        plt.title("weathersit")
-        plt.tight_layout()
-        plt.show()
+    @staticmethod
+    def plot_histograms(data):
+        # Variables cuantitativas
+        quantitative_vars = ['temp', 'atemp', 'hum', 'windspeed', 'casual', 'registered']
+        _plot_quantitative_histograms(data, quantitative_vars)
+
+        # Variables categóricas
+        categorical_vars = ['season', 'yr', 'mnth', 'hr', 'holiday', 'weekday', 'workingday', 'weathersit']
+        _plot_categorical_countplots(data, categorical_vars)
+
+   
         
     @staticmethod
     def plot_distribution_graphs(data):
