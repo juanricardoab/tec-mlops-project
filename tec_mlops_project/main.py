@@ -1,5 +1,6 @@
 # Main function for running the pipeline
 from bikeSharingModel import BikeSharingModel
+import yaml
 
 
 ## Execute BikeSharingModel
@@ -17,4 +18,6 @@ def main(fileNumber):
 
 
 if __name__ == "__main__":
-    main(275)
+    with open("./params.yaml") as conf_file:
+        config = yaml.safe_load(conf_file)
+    main(config['data_load']['fileNumber'])
