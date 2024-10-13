@@ -55,10 +55,10 @@ stages:
   preprocess:
     cmd: python src/stages/preprocess.py --config=params.yaml
     deps:
-    - path: src/stages/data_clean.py
+    - path: src/stages/preprocess.py
       hash: md5
-      md5: 145f809ade590f6bb03c32455441bb35
-      size: 1339
+      md5: 0cf6ce4fb9f1c916c4c044a5001b4d33
+      size: 2177
     params:
       params.yaml:
         data_clean:
@@ -75,3 +75,38 @@ stages:
       hash: md5
       md5: 45bd8d3b65dd086cec3b3dc47e1f6a7e
       size: 60685
+  split:
+    cmd: python src/stages/split.py --config=params.yaml
+    deps:
+    - path: data/processed/X.csv
+      hash: md5
+      md5: ff08fa379eeaecc9afc803f0868b9295
+      size: 727696
+    - path: data/processed/y.csv
+      hash: md5
+      md5: 45bd8d3b65dd086cec3b3dc47e1f6a7e
+      size: 60685
+    - path: src/stages/preprocess.py
+      hash: md5
+      md5: 0cf6ce4fb9f1c916c4c044a5001b4d33
+      size: 2177
+    params:
+      params.yaml:
+        data_split:
+          test_size: 0.2
+          x_train: data/processed/x_train.csv
+          y_train: data/processed/y_train.csv
+          x_test: data/processed/x_test.csv
+          y_test: data/processed/y_test.csv
+        preprocess:
+          x: data/processed/X.csv
+          y: data/processed/y.csv
+    outs:
+    - path: data/processed/x_train.csv
+      hash: md5
+      md5: e5e0d7af203ef3864ab0e46230263f80
+      size: 2516613
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: f616e74f9da79368f275aa0353d6248a
+      size: 316007
