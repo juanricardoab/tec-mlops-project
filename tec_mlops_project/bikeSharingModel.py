@@ -1,10 +1,10 @@
 import pickle
 
-from dataExplorer import DataExplorer
-from preprocessData import PreprocessData
+from src.utils.dataExplorer import DataExplorer
+from src.stages.preprocess import PreprocessData
 from sklearn.model_selection import cross_val_score
 from ucimlrepo import fetch_ucirepo
-from utils import (
+from src.utils.utils import (
     evaluate_model,
     get_regresion_model,
     load_x_y_data,
@@ -89,13 +89,13 @@ class BikeSharingModel:
         self.X = self.data_cleaned_oneHot.drop(columns=["cnt", "dteday"])
         self.y = self.data_cleaned_oneHot["cnt"]
         # save X and y to csv
-        self.X.to_csv("../data/processed/X.csv", index=False)
-        self.y.to_csv("../data/processed/y.csv", index=False)
+        self.X.to_csv("./data/processed/X.csv", index=False)
+        self.y.to_csv("./data/processed/y.csv", index=False)
         return self
 
     def train_model(self):
         self.X, self.y = load_x_y_data(
-            "../data/processed/X.csv", "../data/processed/y.csv"
+            "./data/processed/X.csv", "./data/processed/y.csv"
         )
         self.X, self.y = scale_x_y_data(self.X, self.y)
         self.X_train, self.X_test, self.y_train, self.y_test = split_data(
@@ -103,7 +103,7 @@ class BikeSharingModel:
         )
         self.model = get_regresion_model()
         self.model.fit(self.X_train, self.y_train)
-        self.predict = self.mode.predict(self.X_test)
+        self.predict = self.model.predict(self.X_test)
         return self
 
     def evaluate_model(self):
@@ -130,10 +130,10 @@ class BikeSharingModel:
         return self
 
     def save_model(self, model_path):
-        with open("../data/models/lin_reg_model.pkl", "wb") as f:
+        with open("./data/models/lin_reg_model.pkl", "wb") as f:
             pickle.dump(self.model, f)
 
     def load_model(self, model_path):
-        with open("../data/models/lin_reg_model.pkl", "rb") as f:
+        with open("./data/models/lin_reg_model.pkl", "rb") as f:
             self.model = pickle.load(f)
         return self

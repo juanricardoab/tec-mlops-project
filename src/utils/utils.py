@@ -7,8 +7,8 @@ from sklearn.preprocessing import StandardScaler
 
 
 def load_x_y_data(pathX, pathY):
-    X = pd.read_csv("../data/processed/X.csv")
-    y = pd.read_csv("../data/processed/y.csv")
+    X = pd.read_csv("./data/processed/X.csv")
+    y = pd.read_csv("./data/processed/y.csv")
     return X, y
 
 
