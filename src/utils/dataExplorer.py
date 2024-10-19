@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import os
 
 
 class DataExplorer:
@@ -25,7 +26,7 @@ class DataExplorer:
         return data_cleaned
     
     @staticmethod
-    def plot_histograms(data):
+    def plot_histograms(data, image_path):
         #Histogramas de las variables cuantitativas
         plt.figure(figsize=(12,6))
         plt.subplot(3, 2, 1)
@@ -47,7 +48,10 @@ class DataExplorer:
         data['registered'].hist(bins=30) 
         plt.title("registered")
         plt.tight_layout()
-        plt.show()
+          # Save and log the plot as an artifact
+        histogram_path = os.path.join(image_path, "quantitative_histograms.png")
+        plt.savefig(histogram_path)
+        plt.close()
         
         #Categorical variables
         plt.figure(figsize=(12,8))
@@ -76,29 +80,40 @@ class DataExplorer:
         sns.countplot(x='weathersit',data=data)
         plt.title("weathersit")
         plt.tight_layout()
-        plt.show()
+        histogram_path = os.path.join(image_path, "categorical_histograms.png")
+        plt.savefig(histogram_path)
+        plt.close()
         
     @staticmethod
-    def plot_distribution_graphs(data):
+    def plot_distribution_graphs(data, image_path):
         # Visualization code for distribution of target variable
         plt.figure(figsize=(8,6))
         sns.distplot(data['cnt'])
         plt.xlabel("Rented Bike Count")
         plt.title('Distribution Plot of Rented Bike Count')
-        plt.show()
+        distribution_path = os.path.join(image_path, "distribution_plot.png")
+        plt.savefig(distribution_path)
+        plt.close()
         
         for col in data.describe().columns:
             fig,axes = plt.subplots(nrows=1,ncols=2,figsize=(13,4))
             sns.histplot(data[col], ax = axes[0],kde = True)
             sns.boxplot(data[col], ax = axes[1],orient='h',showmeans=True,color='pink')
             fig.suptitle("Distribution plot of "+ col, fontsize = 12)
-            plt.show()
+            graph_path = os.path.join(image_path, f"{col}.png")
+            plt.savefig(graph_path)
+            plt.close()
 
     @staticmethod
-    def plot_correlation_matrix(data):
+    def plot_correlation_matrix(data, image_path):
         plt.figure(figsize=(12,8))
         dfCorrelation = data.corr(method='pearson')
         sns.heatmap(round(dfCorrelation,2), annot=True)
+
+        # Save the plot as an image
+        correlation_path = os.path.join(image_path, "correlation_matrix.png")
+        plt.savefig(correlation_path)
+        plt.close() 
         
     @staticmethod
     def plot_correlation_graphs(data, continuous_variables, dependent_variable, categorical_variables):

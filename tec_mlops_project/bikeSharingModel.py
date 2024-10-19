@@ -42,7 +42,7 @@ class BikeSharingModel:
         ##])
         self.X_train, self.X_test, self.y_train, self.y_test = [None] * 4
 
-    def load_data(self):
+    def load_data(self, image_path='./data/processed/'):
         bike_sharing = fetch_ucirepo(id=self.fileNumber)
         self.bike_sharing_df = bike_sharing.data.original
         DataExplorer.explore_data(self.bike_sharing_df)
@@ -50,16 +50,16 @@ class BikeSharingModel:
             self.bike_sharing_df, self.categorical_variables
         )
         DataExplorer.explore_data(self.data_cleaned)
-        DataExplorer.plot_histograms(self.data_cleaned)
-        DataExplorer.plot_distribution_graphs(self.data_cleaned)
-        DataExplorer.plot_correlation_matrix(self.data_cleaned)
-        DataExplorer.plot_correlation_graphs(
-            self.data_cleaned,
-            self.continuous_variables,
-            self.dependent_variable,
-            self.categorical_variables,
-        )
-        DataExplorer.plot_average_rent_over_time(self.data_cleaned)
+        DataExplorer.plot_histograms(self.data_cleaned, image_path)
+        DataExplorer.plot_distribution_graphs(self.data_cleaned, image_path)
+        DataExplorer.plot_correlation_matrix(self.data_cleaned, image_path)
+        # DataExplorer.plot_correlation_graphs(
+        #     self.data_cleaned,
+        #     self.continuous_variables,
+        #     self.dependent_variable,
+        #     self.categorical_variables,
+        # )
+        # DataExplorer.plot_average_rent_over_time(self.data_cleaned)
         return self
 
     def preprocess_data(self):
