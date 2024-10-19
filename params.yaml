@@ -1,21 +1,45 @@
 base:
   seed: 42
+  fileNumber: 275
 
 data_load:
   day_csv: 'data/raw/day.csv'
   hour_csv: 'data/raw/hour.csv'
-  fileNumber: 275
+  bike_csv: 'data/raw/bike.csv'
+  continuous_variable: ['temp', 'atemp', 'hum', 'windspeed', 'casual', 'registered']
+  categorical_variable: ['season', 'yr', 'mnth', 'hr', 'holiday', 'weekday', 'workingday', 'weathersit']
+  dependent_variable: ['cnt']
+
+data_clean:
+  clean_csv: 'data/processed/bike_cleaned.csv'
+
+preprocess:
+  x: 'data/processed/X.csv'
+  y: 'data/processed/y.csv'
 
 data_split:
   test_size: 0.2
-  trainset_path: 'data/processed/train_hour.csv'
-  testset_path: 'data/processed/test_hour.csv'
+  x_train: 'data/processed/x_train.csv'
+  y_train: 'data/processed/y_train.csv'
+  x_test: 'data/processed/x_test.csv'
+  y_test: 'data/processed/y_test.csv'
 
 train:
   cv: 3
   estimator_name: logreg
-  C: 0.001
-  max_iter: 100
-  solver: 'lbfgs'
-  multi_class: 'multinomial'
-  model_path: models/model.joblib
+  estimators:
+    logreg: # sklearn.linear_model.LogisticRegression
+      param_grid: # params of GridSearchCV constructor
+        C: [0.001]
+        max_iter: [100]
+        solver: ['lbfgs']
+        multi_class: ['multinomial']
+    svm: # sklearn.svm.SVC
+      param_grid:
+        C: [0.1, 1.0]
+        kernel: ['rbf', 'linear']
+        gamma: ['scale']
+        degree: [3, 5]
+  y_pred: 'data/processed/y_pred.csv'
+  model_path: models/lin_reg_model.pkl.joblib
+

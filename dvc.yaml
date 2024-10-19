@@ -1,0 +1,59 @@
+stages:
+  data_load:
+    cmd: python src/stages/data_load.py --config=params.yaml
+    deps:
+    - src/stages/data_load.py
+    params:
+    - base
+  
+  data_clean:
+    cmd: python src/stages/data_clean.py --config=params.yaml
+    deps:
+    - data/raw/bike.csv
+    - src/stages/data_clean.py
+    params:
+    - data_load
+    outs:
+    - data/processed/bike_cleaned.csv
+  
+  preprocess:
+    cmd: python src/stages/preprocess.py --config=params.yaml
+    deps:
+    - src/stages/preprocess.py
+    params:
+    - data_clean
+    - preprocess
+    outs:
+    - data/processed/X.csv
+    - data/processed/y.csv
+
+  split:
+    cmd: python src/stages/split.py --config=params.yaml
+    deps:
+    - data/processed/X.csv
+    - data/processed/y.csv
+    - src/stages/preprocess.py
+    params:
+    - data_split
+    - preprocess
+    outs:
+    - data/processed/x_train.csv
+    - data/processed/y_train.csv
+    - data/processed/x_test.csv
+    - data/processed/y_test.csv
+
+  
+  train:
+    cmd: python src/stages/train.py --config=params.yaml
+    deps:
+    - data/processed/x_train.csv
+    - data/processed/y_train.csv
+    - data/processed/x_test.csv
+    - data/processed/y_test.csv
+    params:
+    - data_split
+    - train
+
+
+
+
