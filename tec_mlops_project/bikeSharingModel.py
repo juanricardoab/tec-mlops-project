@@ -6,7 +6,7 @@ from src.utils.dataExplorer import DataExplorer
 from src.stages.preprocess import PreprocessData
 from sklearn.model_selection import cross_val_score
 from ucimlrepo import fetch_ucirepo
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from src.utils.utils import (
     evaluate_model,
     get_regresion_model,
@@ -142,8 +142,7 @@ class BikeSharingModel:
         return self
     
     def train_and_log_model(self):
-        params_lr = {"C": 1.0, "solver": "liblinear", "random_state": 42}
-        model_lr = get_regresion_model(params=params_lr)
+        model_lr = get_regresion_model()
         model_name = "LinearRegression"
         self.X, self.y = load_x_y_data(
             "./data/processed/X.csv", "./data/processed/y.csv"
@@ -159,9 +158,8 @@ class BikeSharingModel:
         with mlflow.start_run(run_name=model_name):
             model_lr.fit(self.X_train, self.y_train)
             y_pred = model_lr.predict(self.X_test)
-            acc = accuracy_score(self.y_test, y_pred)
-            prec = precision_score(self.y_test, y_pred, average='weighted')
-            rec = recall_score(self.y_test, y_pred, average='weighted')
-            mlflow.log_params(params_lr)
-            mlflow.log_metrics({"accuracy": acc, "precision": prec, "recall": rec})
+            mse = mean_squared_error(self.y_test, y_pred)
+            mae = mean_absolute_error(self.y_test, y_pred)
+            r2 = r2_score(self.y_test, y_pred)
+            mlflow.log_metrics({"MSE": mse, "MAE": mae, "r2": r2})
             mlflow.sklearn.log_model(model_lr, artifact_path="models")

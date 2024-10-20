@@ -26,7 +26,7 @@ def eval_metrics(actual, pred):
 
 
 if __name__ == "__main__": 
-    mlflow.set_tracking_uri('http://localhost:5000')
+    mlflow.set_tracking_uri('http://localhost:5020')
     experiment = mlflow.set_experiment("sklearn-wine")
     print("mlflow tracking uri:", mlflow.tracking.get_tracking_uri())
     print("experiment:", experiment)
