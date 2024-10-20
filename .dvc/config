@@ -1,0 +1,6 @@
+[core]
+    autostage = true
+    remote = myremote
+    
+['remote "myremote"']
+    url = gs://bucket_test_mlops
