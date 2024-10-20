@@ -4,58 +4,76 @@
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-Project Repository Team 2 - MLOps.
-
 ## Project Organization
 
-```
-├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
+# **MLOps Project: Team 2.**
+
+This project implements a complete **MLOps pipeline** to predict the number of Bike Sharing.
+It uses **DVC** for tracking data, and **MLflow** to manage experiments and the model lifecycle. 
+The pipeline includes data preparation, model training, and evaluation.
+
+## **Project Structure**
+
+```bash
+tec-mlops-project/
+├── .dvc/                   
 ├── data
-│   ├── external       <- Data from third party sources.
+│   ├── external       <- Data from third-party sources.
 │   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
-│
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-│
-├── models             <- Trained and serialized models, model predictions, or model summaries
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
-│
-├── pyproject.toml     <- Project configuration file with package metadata for 
-│                         tec_mlops_project and configuration for tools like black
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
-│
-└── tec_mlops_project   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes tec_mlops_project a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
+│   ├── processed      <- The final, canonical datasets for modeling.
+│   └── raw            <- The original, immutable data dump.       
+├── models/                 
+├── src/
+│   ├── stages/           
+│   │   ├── data_clean.py          
+│   │   ├── data_load.py          
+│   │   ├── preprocess.py   
+│   │   ├── split.py   
+│   │   └── train.py   
+│   ├── utils/                 
+│   │   ├── dataExplorer.py          
+│   │   └── utils.py      
+├── notebooks/
+├── modeling_pipeline/    <- MLflow pipeline
+│   ├── docker-compose.yaml
+│   └── mlflow/
+├── setup.cfg          
+├── tec_mlops_project/   
+│   ├── main.py             
+│   └── bikeSharingModel.py                
+└── dvc.yaml    
 ```
 
---------
+## **Setup and Running**
+
+### **Prerequisites**
+
+- Docker & Docker Compose
+- Python 3.8+ and `pip`
+- DVC (`pip install dvc`)
+- **Remote storage** set up for DVC (e.g., S3 or GDrive)
+
+### **Clone the Repository**
+
+```bash
+git clone https://github.com/juanricardoab/tec-mlops-project.git
+cd tec-mlops-project
+```
+
+### **Virtual Environment Setup**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### **Run the Project with Docker Compose**
+
+#### **Development**:
+
+```bash
+cd modeling_pipeline
+docker compose --env-file config.env up -d --build
+```
+
 
