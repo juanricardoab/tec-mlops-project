@@ -1,9 +1,12 @@
 import pickle
 
+import mlflow
+
 from src.utils.dataExplorer import DataExplorer
 from src.stages.preprocess import PreprocessData
 from sklearn.model_selection import cross_val_score
 from ucimlrepo import fetch_ucirepo
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 from src.utils.utils import (
     evaluate_model,
     get_regresion_model,
@@ -137,3 +140,28 @@ class BikeSharingModel:
         with open("./data/models/lin_reg_model.pkl", "rb") as f:
             self.model = pickle.load(f)
         return self
+    
+    def train_and_log_model(self):
+        params_lr = {"C": 1.0, "solver": "liblinear", "random_state": 42}
+        model_lr = get_regresion_model(params=params_lr)
+        model_name = "LinearRegression"
+        self.X, self.y = load_x_y_data(
+            "./data/processed/X.csv", "./data/processed/y.csv"
+        )
+        self.X, self.y = scale_x_y_data(self.X, self.y)
+        self.X_train, self.X_test, self.y_train, self.y_test = split_data(
+            self.X, self.y
+        )
+        
+        mlflow.set_tracking_uri("http://localhost:5020")
+        mlflow.set_experiment(f"BikeSharingModel_{model_name}")
+
+        with mlflow.start_run(run_name=model_name):
+            model_lr.fit(self.X_train, self.y_train)
+            y_pred = model_lr.predict(self.X_test)
+            acc = accuracy_score(self.y_test, y_pred)
+            prec = precision_score(self.y_test, y_pred, average='weighted')
+            rec = recall_score(self.y_test, y_pred, average='weighted')
+            mlflow.log_params(params_lr)
+            mlflow.log_metrics({"accuracy": acc, "precision": prec, "recall": rec})
+            mlflow.sklearn.log_model(model_lr, artifact_path="models")

@@ -24,26 +24,12 @@ def load_graphs():
         mlflow.log_artifact(file)
 
 def main(fileNumber):
-    mlflow.set_tracking_uri("http://localhost:5020")
-    mlflow.set_experiment("BikeSharingModel")
-    images_path = "./data/processed/"
-
-    with mlflow.start_run() as run:
-        mlflow.log_param("fileNumber", fileNumber)
-        mlflow.log_param("images_path", images_path)
-        model = BikeSharingModel(fileNumber)
-        model.load_data()
-        model.preprocess_data()
-        model.train_model()
-        model.evaluate_model()
-        log_model_scores(model)
-        model.cross_validate_model()
-        log_model_cv_scores(model)
-
-        mlflow.sklearn.log_model(model.model, "model")
-        load_graphs()
-        # model.save_model()
-        # model.load_model()
+    #log model and experiments step
+    model = BikeSharingModel(fileNumber)
+    model.load_data()
+    model.preprocess_data()
+    model.train_and_log_model()   
+    load_graphs()
 
 
 if __name__ == "__main__":
