@@ -7,8 +7,8 @@ from sklearn.preprocessing import StandardScaler
 
 
 def load_x_y_data(pathX, pathY):
-    X = pd.read_csv("../data/processed/X.csv")
-    y = pd.read_csv("../data/processed/y.csv")
+    X = pd.read_csv("./data/processed/X.csv")
+    y = pd.read_csv("./data/processed/y.csv")
     return X, y
 
 
@@ -26,8 +26,8 @@ def split_data(X, y, test_size=0.2, random_state=42):
     return X_train, X_test, y_train, y_test
 
 
-def get_regresion_model():
-    return LinearRegression(fit_intercept=True)
+def get_regresion_model(params={"fit_intercept":True}):
+    return LinearRegression(**params)
 
 
 def evaluate_model(model, X_train, X_test, y_train, y_test, y_pred):
