@@ -1,5 +1,3 @@
-version: "3.3"
-
 services:
   db:
     restart: always
@@ -14,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=${PG_PASSWORD}
       - POSTGRES_DATABASE=${PG_DATABASE}
     volumes:
-      - ./db_data:/var/lib/postgresql/data/
+      - "db_data:/var/lib/postgresql/data/"
     healthcheck:
       test: ["CMD", "pg_isready", "-p", "${PG_PORT}", "-U", "${PG_USER}"]
       interval: 5s
