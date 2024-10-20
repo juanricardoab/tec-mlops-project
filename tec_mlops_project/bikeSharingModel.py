@@ -1,6 +1,11 @@
 import pickle
+import sys
+import os
 
 import mlflow
+
+# Agregar la raíz del proyecto al path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 
 from src.utils.dataExplorer import DataExplorer
 from src.stages.preprocess import PreprocessData
