@@ -136,11 +136,11 @@ class BikeSharingModel:
 
         return self
 
-    def save_model(self, model_path):
+    def save_model(self):
         with open("./data/models/lin_reg_model.pkl", "wb") as f:
             pickle.dump(self.model, f)
 
-    def load_model(self, model_path):
+    def load_model(self):
         with open("./data/models/lin_reg_model.pkl", "rb") as f:
             self.model = pickle.load(f)
         return self
