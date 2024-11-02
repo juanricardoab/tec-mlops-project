@@ -2,7 +2,7 @@ import yaml
 import argparse
 
 import pandas as pd
-from dataExplorer import DataExplorer
+from src.utils.dataExplorer import DataExplorer
 
 
 

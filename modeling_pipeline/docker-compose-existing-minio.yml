@@ -14,7 +14,7 @@ services:
       - POSTGRES_PASSWORD=${PG_PASSWORD}
       - POSTGRES_DATABASE=${PG_DATABASE}
     volumes:
-      - ./db_data:/var/lib/postgresql/data/
+      - db_data:/var/lib/postgresql/data/
     healthcheck:
       test: ["CMD", "pg_isready", "-p", "${PG_PORT}", "-U", "${PG_USER}"]
       interval: 5s
@@ -23,7 +23,7 @@ services:
   
   tracking_server:
     restart: always
-    build: ./mlflow
+    build: mlflow
     image: mlflow_server
     container_name: mlflow_server
     depends_on:
