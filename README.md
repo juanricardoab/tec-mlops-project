@@ -34,7 +34,7 @@ tec-mlops-project/
 │   │   ├── dataExplorer.py          
 │   │   └── utils.py      
 ├── notebooks/
-├── modeling_pipeline/    <- MLflow pipeline
+├── mlflow_pipeline/    <- MLflow pipeline
 │   ├── docker-compose.yaml
 │   └── mlflow/
 ├── setup.cfg          
