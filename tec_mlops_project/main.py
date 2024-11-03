@@ -1,9 +1,8 @@
-# Main function for running the pipeline
 from bikeSharingModel import BikeSharingModel
 import yaml
 import mlflow
 import glob
-
+import argparse
 
 ## Execute BikeSharingModel
 #  @Param fileNumber int
@@ -23,16 +22,44 @@ def load_graphs():
     for file in glob.glob("./data/processed/*.png"):
         mlflow.log_artifact(file)
 
-def main(fileNumber):
-    #log model and experiments step
-    model = BikeSharingModel(fileNumber)
-    model.load_data()
-    model.preprocess_data()
-    model.train_and_log_model()   
-    load_graphs()
+def main(fileNumber, model_type="linear"):   
+    mlflow.set_tracking_uri("http://localhost:5020")
+    mlflow.set_experiment(f"BikeSharingModel_{model_type.capitalize()}")
+    images_path = "./data/processed/"
+
+    with mlflow.start_run() as run:
+        mlflow.log_param("fileNumber", fileNumber)
+        mlflow.log_param("images_path", images_path)
+        model = BikeSharingModel(fileNumber, model_type=model_type)
+        model.load_data()
+        model.preprocess_data()
+        model.train_model()
+        model.evaluate_model()
+        log_model_scores(model)
+        model.cross_validate_model()
+        log_model_cv_scores(model)
+
+        mlflow.sklearn.log_model(model.model, "model")
+        load_graphs()
 
 
 if __name__ == "__main__":
-    with open("./params.yaml") as conf_file:
+    parser = argparse.ArgumentParser(description="Run BikeSharingModel with specified config file.")
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="./params.yaml",
+        help="Path to the configuration file (params.yaml)"
+    )
+    args = parser.parse_args()
+
+    # Load the configuration file
+    with open(args.config, "r") as conf_file:
         config = yaml.safe_load(conf_file)
-    main(config['base']['fileNumber'])
+
+    # Extract parameters from config
+    file_number = config['base']['fileNumber']
+    model_type = config['base']['model_type']
+
+    # Run main function with extracted parameters
+    main(file_number, model_type)
