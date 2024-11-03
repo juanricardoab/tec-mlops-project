@@ -5,9 +5,8 @@ from sklearn.linear_model import LinearRegression
 
 from src.utils.utils import (
     load_x_y_data,
-    get_regresion_model
-    )
-
+    get_regresion_model)
+    
 def test_load_x_y_data():
     mock_df_X = pd.DataFrame({"col1": [1, 2, 3], "col2": [4, 5, 6]})
     mock_df_y = pd.DataFrame({"target": [0, 1, 0]})
