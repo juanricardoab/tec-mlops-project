@@ -81,7 +81,7 @@ docker compose --env-file config.env up -d --build
 ```bash
 python tec_mlops_project/main.py --config=params.yaml
 ```
-#### **Executing training pipelin***
+#### **Data Source***
 ```bash
-python tec_mlops_project/main.py --config=params.yaml
+[python tec_mlops_project/main.py --config=params.yaml](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset)
 ```
