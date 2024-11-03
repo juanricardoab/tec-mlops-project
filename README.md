@@ -77,3 +77,7 @@ docker compose --env-file config.env up -d --build
 ```
 
 
+#### **Executing training pipelin***
+```bash
+python tec_mlops_project/main.py --config=params.yaml
+```

@@ -3,6 +3,7 @@ import sys
 import os
 
 import mlflow
+from mlflow.models import infer_signature
 
 # Agregar la raíz del proyecto al path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
@@ -22,8 +23,9 @@ from src.utils.utils import (
 
 
 class BikeSharingModel:
-    def __init__(self, fileNumber):
+    def __init__(self, fileNumber, model_type="linear"):
         self.fileNumber = fileNumber
+        self.model_type = model_type  # Added model_type to select the regression model
         # defining continuous, categorical and dependent variable
         self.continuous_variables = [
             "temp",
@@ -44,10 +46,6 @@ class BikeSharingModel:
             "weathersit",
         ]
         self.dependent_variable = ["cnt"]
-        ##self.model_pipeline = Pipeline([
-        ##    ('scaler', StandardScaler()),
-        ##    ('classifier', LogisticRegression(max_iter=1000))
-        ##])
         self.X_train, self.X_test, self.y_train, self.y_test = [None] * 4
 
     def load_data(self, image_path='./data/processed/'):
@@ -61,37 +59,17 @@ class BikeSharingModel:
         DataExplorer.plot_histograms(self.data_cleaned, image_path)
         DataExplorer.plot_distribution_graphs(self.data_cleaned, image_path)
         DataExplorer.plot_correlation_matrix(self.data_cleaned, image_path)
-        # DataExplorer.plot_correlation_graphs(
-        #     self.data_cleaned,
-        #     self.continuous_variables,
-        #     self.dependent_variable,
-        #     self.categorical_variables,
-        # )
-        # DataExplorer.plot_average_rent_over_time(self.data_cleaned)
         return self
 
     def preprocess_data(self):
         self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(
             self.data_cleaned, "season"
         )
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(
-            self.data_cleaned_oneHot, "mnth"
-        )
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(
-            self.data_cleaned_oneHot, "hr"
-        )
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(
-            self.data_cleaned_oneHot, "holiday"
-        )
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(
-            self.data_cleaned_oneHot, "weekday"
-        )
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(
-            self.data_cleaned_oneHot, "workingday"
-        )
-        self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(
-            self.data_cleaned_oneHot, "weathersit"
-        )
+        # Repeat one-hot encoding for other categorical variables
+        for column in ["mnth", "hr", "holiday", "weekday", "workingday", "weathersit"]:
+            self.data_cleaned_oneHot = PreprocessData.one_hot_encoding(
+                self.data_cleaned_oneHot, column
+            )
 
         PreprocessData.min_max_scaler(self.data_cleaned_oneHot)
         self.X = self.data_cleaned_oneHot.drop(columns=["cnt", "dteday"])
@@ -109,7 +87,7 @@ class BikeSharingModel:
         self.X_train, self.X_test, self.y_train, self.y_test = split_data(
             self.X, self.y
         )
-        self.model = get_regresion_model()
+        self.model = get_regresion_model(self.model_type)  # Pass model_type to get_regresion_model
         self.model.fit(self.X_train, self.y_train)
         self.predict = self.model.predict(self.X_test)
         return self
@@ -138,17 +116,16 @@ class BikeSharingModel:
         return self
 
     def save_model(self, model_path):
-        with open("./data/models/lin_reg_model.pkl", "wb") as f:
+        with open(model_path, "wb") as f:
             pickle.dump(self.model, f)
 
     def load_model(self, model_path):
-        with open("./data/models/lin_reg_model.pkl", "rb") as f:
+        with open(model_path, "rb") as f:
             self.model = pickle.load(f)
         return self
     
     def train_and_log_model(self):
-        model_lr = get_regresion_model()
-        model_name = "LinearRegression"
+        model_name = self.model_type.capitalize() + "Regression"
         self.X, self.y = load_x_y_data(
             "./data/processed/X.csv", "./data/processed/y.csv"
         )
@@ -161,10 +138,11 @@ class BikeSharingModel:
         mlflow.set_experiment(f"BikeSharingModel_{model_name}")
 
         with mlflow.start_run(run_name=model_name):
-            model_lr.fit(self.X_train, self.y_train)
-            y_pred = model_lr.predict(self.X_test)
+            self.model.fit(self.X_train, self.y_train)
+            y_pred = self.model.predict(self.X_test)
             mse = mean_squared_error(self.y_test, y_pred)
             mae = mean_absolute_error(self.y_test, y_pred)
             r2 = r2_score(self.y_test, y_pred)
             mlflow.log_metrics({"MSE": mse, "MAE": mae, "r2": r2})
-            mlflow.sklearn.log_model(model_lr, artifact_path="models")
+            signature = infer_signature(self.X_test, self.model.predict(self.X_test))
+            mlflow.sklearn.log_model(self.model, artifact_path="models", signature=signature)
