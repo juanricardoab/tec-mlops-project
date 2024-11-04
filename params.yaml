@@ -1,6 +1,7 @@
 base:
   seed: 42
   fileNumber: 275
+  model_type: 'linear'
 
 data_load:
   day_csv: 'data/raw/day.csv'
