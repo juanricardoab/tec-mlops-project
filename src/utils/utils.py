@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 from sklearn.neighbors import KNeighborsRegressor
 
+
 def load_x_y_data(pathX, pathY):
     X = pd.read_csv("./data/processed/X.csv")
     y = pd.read_csv("./data/processed/y.csv")
@@ -34,12 +35,12 @@ def split_data(X, y, test_size=0.2, random_state=42):
 def get_regresion_model(model_type="linear"):
     """
     Returns a regression model based on the specified model type.
-    
+
     Parameters:
         model_type (str): The type of regression model to return. Options include:
                           "linear", "ridge", "lasso", "elasticnet", "decision_tree",
                           "random_forest", "svr", and "knn".
-                          
+
     Returns:
         model: The regression model instance.
     """
@@ -65,17 +66,21 @@ def get_regresion_model(model_type="linear"):
                          "'random_forest', 'svr', and 'knn'.")
 
 
-def get_svr_model(params={"kernel":"linear", "C":1.0}):
+def get_svr_model(params={"kernel": "linear", "C": 1.0}):
     return SVR(**params)
 
-def get_knn_model(params={"n_neighbors":5}):
+
+def get_knn_model(params={"n_neighbors": 5}):
     return KNeighborsRegressor(**params)
 
-def get_random_forest_model(params={"n_estimators":100, "max_depth":None}):
+
+def get_random_forest_model(params={"n_estimators": 100, "max_depth": None}):
     return RandomForestRegressor(**params)
 
-def get_decision_tree_model(params={"max_depth":None}):
+
+def get_decision_tree_model(params={"max_depth": None}):
     return DecisionTreeRegressor(**params)
+
 
 def evaluate_model(model, X_train, X_test, y_train, y_test, y_pred):
     y_t = np.square(y_test)

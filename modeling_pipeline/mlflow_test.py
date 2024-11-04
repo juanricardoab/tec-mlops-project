@@ -18,6 +18,7 @@ import logging
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
+
 def eval_metrics(actual, pred):
     rmse = np.sqrt(mean_squared_error(actual, pred))
     mae = mean_absolute_error(actual, pred)
@@ -25,7 +26,7 @@ def eval_metrics(actual, pred):
     return rmse, mae, r2
 
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
     mlflow.set_tracking_uri('http://localhost:5020')
     experiment = mlflow.set_experiment("sklearn-wine")
     print("mlflow tracking uri:", mlflow.tracking.get_tracking_uri())
@@ -57,7 +58,7 @@ if __name__ == "__main__":
     l1_ratio = float(sys.argv[2]) if len(sys.argv) > 2 else 0.5
 
     with mlflow.start_run(experiment_id=experiment.experiment_id):
-        
+
         lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
         lr.fit(train_x, train_y)
 
@@ -79,7 +80,6 @@ if __name__ == "__main__":
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
 
         signature = infer_signature(test_x, lr.predict(test_x))
-
 
         model_info = mlflow.sklearn.log_model(
             sk_model=lr, artifact_path="model", signature=signature)

@@ -8,6 +8,7 @@ import argparse
 #  @Param fileNumber int
 ## ------------------------
 
+
 def log_model_scores(model):
     score_list = ['mse', 'rmse', 'mae', 'r2_train', 'r2', 'r2_adjusted']
     for index, score in enumerate(model.model_score):
@@ -18,11 +19,13 @@ def log_model_cv_scores(model):
     mlflow.log_metric("cv_mean_score", model.cv_mean_score)
     mlflow.log_metric("cv_std_score", model.cv_std_score)
 
+
 def load_graphs():
     for file in glob.glob("./data/processed/*.png"):
         mlflow.log_artifact(file)
 
-def main(fileNumber, model_type="linear"):   
+
+def main(fileNumber, model_type="linear"):
     mlflow.set_tracking_uri("http://localhost:5020")
     mlflow.set_experiment(f"BikeSharingModel_{model_type.capitalize()}")
     images_path = "./data/processed/"
