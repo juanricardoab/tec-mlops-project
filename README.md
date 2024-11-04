@@ -18,12 +18,12 @@ The pipeline includes data preparation, model training, and evaluation.
 tec-mlops-project/
 ├── .dvc/                   
 ├── data
-│   ├── external       <- Data from third-party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical datasets for modeling.
-│   └── raw            <- The original, immutable data dump.       
-├── models/                 
-├── src/
+│   ├── external            <- Datos de fuentes de terceros.
+│   ├── interim             <- Datos intermedios que han sido transformados.
+│   ├── processed           <- Los conjuntos de datos finales para el modelado.
+│   └── raw                 <- Datos originales e inmutables.       
+├── models/                 <- Modelos entrenados y serializados.
+├── src/                    <- Código fuente para usar en este proyecto.
 │   ├── stages/           
 │   │   ├── data_clean.py          
 │   │   ├── data_load.py          
@@ -32,15 +32,15 @@ tec-mlops-project/
 │   │   └── train.py   
 │   ├── utils/                 
 │   │   ├── dataExplorer.py          
-│   │   └── utils.py      
-├── notebooks/
-├── modeling_pipeline/    <- MLflow pipeline
+│   │   └── utils.py
+├── notebooks/              <- Jupyter notebooks
+├── modeling_pipeline/      <- MLflow pipeline
 │   ├── docker-compose.yaml
 │   └── mlflow/
 ├── setup.cfg          
 ├── tec_mlops_project/   
 │   ├── main.py             
-│   └── bikeSharingModel.py                
+│   └── bikeSharingModel.py                  
 └── dvc.yaml    
 ```
 

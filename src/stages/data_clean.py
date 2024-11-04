@@ -1,11 +1,6 @@
 import yaml 
 import argparse
-
 import pandas as pd
-from dataExplorer import DataExplorer
-
-
-
 
 """
 Load the data form the params.yaml file 

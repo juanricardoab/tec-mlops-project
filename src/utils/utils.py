@@ -10,8 +10,8 @@ from sklearn.svm import SVR
 from sklearn.neighbors import KNeighborsRegressor
 
 def load_x_y_data(pathX, pathY):
-    X = pd.read_csv("./data/processed/X.csv")
-    y = pd.read_csv("./data/processed/y.csv")
+    X = pd.read_csv(pathX)
+    y = pd.read_csv(pathY)
     return X, y
 
 
