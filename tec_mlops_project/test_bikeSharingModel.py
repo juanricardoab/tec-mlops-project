@@ -16,6 +16,39 @@ class TestBikeSharingModel:
     def test_check_create_object(self):
         assert self.model.fileNumber == 275
         
+    def test_train_model(self):
+        mock_X = np.array(self.model.X)
+        mock_y = np.array(self.model.y)
+        mock_X_train = mock_X[:3]
+        mock_X_test = mock_X[3:]
+        mock_y_train = mock_y[:3]
+        mock_y_test = mock_y[3:]
+        mock_predictions = np.array([1, 0])
+
+        mock_model = self.model.model
+        mock_model.predict.return_value = mock_predictions
+
+        with patch("bikeSharingModel.load_x_y_data", return_value=(mock_X, mock_y)) as mock_load_x_y_data, \
+            patch("bikeSharingModel.scale_x_y_data", return_value=(mock_X, mock_y)) as mock_scale_x_y_data, \
+            patch("bikeSharingModel.split_data", return_value=(mock_X_train, mock_X_test, mock_y_train, mock_y_test)) as mock_split_data, \
+            patch("bikeSharingModel.get_regresion_model", return_value=mock_model) as mock_get_regresion_model:
+            
+            result = self.model.train_model()
+            mock_load_x_y_data.assert_called_once_with("./data/processed/X.csv", "./data/processed/y.csv")
+            mock_scale_x_y_data.assert_called_once_with(mock_X, mock_y)
+            mock_split_data.assert_called_once_with(mock_X, mock_y)
+            mock_get_regresion_model.assert_called_once()
+            mock_model.fit.assert_called_once_with(mock_X_train, mock_y_train)
+            mock_model.predict.assert_called_once_with(mock_X_test)
+
+            assert np.array_equal(self.model.X_train, mock_X_train)
+            assert np.array_equal(self.model.X_test, mock_X_test)
+            assert np.array_equal(self.model.y_train, mock_y_train)
+            assert np.array_equal(self.model.y_test, mock_y_test)
+            assert self.model.model == mock_model
+            assert np.array_equal(self.model.predict, mock_predictions)
+            assert result is self.model
+        
     def test_cross_validate_model(self):
         mock_scores = np.array([0.8, 0.75, 0.78, 0.82, 0.77])
 
