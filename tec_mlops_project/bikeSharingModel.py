@@ -1,3 +1,15 @@
+from src.utils.utils import (
+    evaluate_model,
+    get_regresion_model,
+    load_x_y_data,
+    scale_x_y_data,
+    split_data,
+)
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from ucimlrepo import fetch_ucirepo
+from sklearn.model_selection import cross_val_score
+from src.stages.preprocess import PreprocessData
+from src.utils.dataExplorer import DataExplorer
 import pickle
 import sys
 import os
@@ -6,19 +18,6 @@ from mlflow.models import infer_signature
 
 # Agregar la raíz del proyecto al path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
-
-from src.utils.dataExplorer import DataExplorer
-from src.stages.preprocess import PreprocessData
-from sklearn.model_selection import cross_val_score
-from ucimlrepo import fetch_ucirepo
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from src.utils.utils import (
-    evaluate_model,
-    get_regresion_model,
-    load_x_y_data,
-    scale_x_y_data,
-    split_data,
-)
 
 
 class BikeSharingModel:
@@ -122,7 +121,7 @@ class BikeSharingModel:
         with open(model_path, "rb") as f:
             self.model = pickle.load(f)
         return self
-    
+
     def train_and_log_model(self):
         model_name = self.model_type.capitalize() + "Regression"
         self.X, self.y = load_x_y_data(
@@ -132,7 +131,7 @@ class BikeSharingModel:
         self.X_train, self.X_test, self.y_train, self.y_test = split_data(
             self.X, self.y
         )
-        
+
         mlflow.set_tracking_uri("http://localhost:5020")
         mlflow.set_experiment(f"BikeSharingModel_{model_name}")
 

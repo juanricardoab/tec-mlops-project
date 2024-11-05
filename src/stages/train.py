@@ -11,9 +11,9 @@ from sklearn.preprocessing import StandardScaler
 import pickle
 import joblib
 
-        
+
 def evaluate_model(config_path) -> None:
-    
+
     with open(config_path) as conf_file:
         config = yaml.safe_load(conf_file)
 
@@ -21,15 +21,12 @@ def evaluate_model(config_path) -> None:
         model = pickle.load(f)
 
     y_test = pd.read_csv(config['data_split']['y_test'])
-    
+
     y_train = pd.read_csv(config['data_split']['y_train'])
     X_train = pd.read_csv(config['data_split']['x_train'])
     X_test = pd.read_csv(config['data_split']['x_test'])
 
     y_pred = model.predict(X_train)
-
-
-   
 
     y_t = np.square(y_test)
     y_p = np.square(y_pred)
@@ -56,7 +53,6 @@ def evaluate_model(config_path) -> None:
     return model_score
 
 
-
 def get_regresion_model():
     return LinearRegression(fit_intercept=True)
 
@@ -78,7 +74,6 @@ def train_model(config_path: Text) -> None:
     model = get_regresion_model()
     model.fit(X_train, y_train)
     predict = model.predict(X_test)
-    
 
     with open(config['train']['model_path'], "wb") as f:
         pickle.dump(model, f)
@@ -104,12 +99,8 @@ def train_model(config_path: Text) -> None:
     print("Test R2 :", r2)
     print("Adjusted R2 : ", r2_adjusted)
 
-
-
-
     # models_path = config['train']['model_path']
     # joblib.dump(model, models_path)
-
 
 
 if __name__ == '__main__':
