@@ -18,7 +18,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-  
+
   s3:
     restart: always
     image: minio/minio
@@ -44,7 +44,7 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
-  
+
   create_buckets:
     image: minio/mc
     container_name: mlflow_create_buckets
@@ -89,6 +89,22 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+
+  training_pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Aquí se especifica el Dockerfile del proyecto
+    container_name: training_pipeline
+    environment:
+      - MLFLOW_TRACKING_URI=http://tracking_server:5000
+      - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
+      - MLFLOW_S3_ENDPOINT_URL=http://s3:${MINIO_PORT}
+      - MLFLOW_S3_IGNORE_TLS=true
+    depends_on:
+      - tracking_server
+    networks:
+      - backend
 
 volumes:
   db_data:
