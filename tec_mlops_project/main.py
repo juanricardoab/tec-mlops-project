@@ -26,7 +26,7 @@ def load_graphs():
 
 
 def main(fileNumber, model_type="linear"):
-    mlflow.set_tracking_uri("http://localhost:5020")
+    mlflow.set_tracking_uri("http://tracking_server:5000")
     mlflow.set_experiment(f"BikeSharingModel_{model_type.capitalize()}")
     images_path = "./data/processed/"
 
