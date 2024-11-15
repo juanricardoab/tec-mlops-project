@@ -24,7 +24,7 @@ services:
     image: minio/minio
     container_name: mlflow_minio
     volumes:
-      - ./minio_data:/data
+      - ./app/minio_data:/data
     ports:
       - "${MINIO_PORT}:9000"
       - "${MINIO_CONSOLE_PORT}:9001"
@@ -63,7 +63,7 @@ services:
 
   tracking_server:
     restart: always
-    build: ./mlflow
+    build: ./app/mlflow
     image: mlflow_server
     container_name: mlflow_server
     depends_on:
@@ -106,6 +106,25 @@ services:
     networks:
       - backend
 
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_app
+  
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000 --log-level info
+    ports:
+      - 8000:8000
+    environment:
+      - ENVIRONMENT=dev
+      - APP_NAME=bike-sharing-mlops
+      - APP_DESCRIPTION=bike-sharing-mlops
+      - APP_VERSION=0.1.0
+      - API_V1_STR=/api/v1
+      - DEBUG=False
+      - DEFAULT_EXPIRE_TIME=90
+    volumes:
+      - ../:/usr/src/app/
 volumes:
   db_data:
   minio_data:
