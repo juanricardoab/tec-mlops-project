@@ -104,4 +104,9 @@ ______________________________________________
 
 `docker compose -f --env-file config.env up -d --build`
 
+### API
+
+`sudo docker-compose -f docker-compose.yaml up fastapi`
+Go to `http://localhost:8000/docs#/`
+
 
