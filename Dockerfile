@@ -13,7 +13,7 @@ WORKDIR /app
 
 # Copy all project files into /app in the container
 COPY . /app
-
+COPY Pipfile* /app
 # Add src directory to PYTHONPATH
 ENV PYTHONPATH="${PYTHONPATH}:/app"
 
