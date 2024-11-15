@@ -91,6 +91,8 @@ python tec_mlops_project/main.py --config=params.yaml
 
 Start services `docker compose --env-file config.env up -d --build`
 
+(in Linux: `sudo docker-compose --env-file config.env -f docker-compose.yaml up -d --build`)
+
 Go to `localhost:9001`
 
 Get MINIO Acces Key and save into `config.env/MINIO_ACCESS_KEY`
