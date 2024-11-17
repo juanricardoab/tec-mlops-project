@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     DEFAULT_EXPIRE_TIME: int = Field(...)
     DEBUG: bool = Field(...)
+    MODEL_PATH: str = Field(...)
 
 
 @lru_cache()

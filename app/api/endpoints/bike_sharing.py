@@ -35,7 +35,6 @@ def predict_from_csv(data: UploadFile = None) -> dict:
             detail="No file provided",
         )
     else:
-        filename = data.filename
         data = pd.read_csv(data.file)
         preds = PredictionService()
         preds.load_model(settings.MODEL_PATH)
@@ -45,10 +44,6 @@ def predict_from_csv(data: UploadFile = None) -> dict:
         X_scaled = scaler.fit_transform(data_to_test)
         predictions = preds.predict(X_scaled)
         print("Finishing prediction process. ", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        if filename == 'test2.csv':
-            return {
-                "Predicción alquiler de bicicletas": 21
-            }
 
     return {
         "Predicción alquiler de bicicletas": int(predictions[0]) if len(predictions) == 1 else predictions.tolist()
