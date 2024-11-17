@@ -115,6 +115,7 @@ services:
     command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000 --log-level info
     ports:
       - 8000:8000
+      - 10019:10019
     environment:
       - ENVIRONMENT=dev
       - APP_NAME=bike-sharing-mlops
@@ -123,6 +124,7 @@ services:
       - API_V1_STR=/api/v1
       - DEBUG=False
       - DEFAULT_EXPIRE_TIME=90
+      - MODEL_PATH=app/models/model_vfinal.pkl
     volumes:
       - ../:/usr/src/app/
 volumes:
