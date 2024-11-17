@@ -175,5 +175,3 @@ minio_data/*
 .vscode
 !db_data/.gitkeep
 !minio_data/.gitkeep
-
-app/minio_data/*

@@ -77,21 +77,19 @@ docker compose --env-file config.env up -d --build
 ```
 
 
-#### **Executing training pipeline***
+#### **Executing training pipelin***
 ```bash
-python app/tec_mlops_project/main.py --config=app/params.yaml
+python tec_mlops_project/main.py --config=params.yaml
 ```
 #### **Data Source***
 ```bash
-[python app/tec_mlops_project/main.py --config=app/params.yaml](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset)
+[python tec_mlops_project/main.py --config=params.yaml](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset)
 ```
 
 
 ### MLFlow
 
 Start services `docker compose --env-file config.env up -d --build`
-
-(in Linux: `sudo docker-compose --env-file config.env -f docker-compose.yaml up -d --build`)
 
 Go to `localhost:9001`
 
@@ -104,11 +102,6 @@ Start again `docker compose --env-file config.env up -d --build`
 
 ______________________________________________
 
-`docker compose --env-file config.env -f docker-compose.yaml up -d`
-
-### API
-
-`sudo docker-compose -f docker-compose.yaml up fastapi`
-Go to `http://localhost:8000/docs#/`
+`docker compose -f --env-file config.env up -d --build`
 
 

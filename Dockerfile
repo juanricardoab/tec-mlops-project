@@ -13,9 +13,9 @@ WORKDIR /app
 
 # Copy all project files into /app in the container
 COPY . /app
-COPY Pipfile* /app
+
 # Add src directory to PYTHONPATH
-ENV PYTHONPATH="/app:${PYTHONPATH}"
+ENV PYTHONPATH="${PYTHONPATH}:/app"
 
 # Install dependencies from requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
