@@ -77,13 +77,13 @@ docker compose --env-file config.env up -d --build
 ```
 
 
-#### **Executing training pipelin***
+#### **Executing training pipeline***
 ```bash
-python tec_mlops_project/main.py --config=params.yaml
+python app/tec_mlops_project/main.py --config=app/params.yaml
 ```
 #### **Data Source***
 ```bash
-[python tec_mlops_project/main.py --config=params.yaml](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset)
+[python app/tec_mlops_project/main.py --config=app/params.yaml](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset)
 ```
 
 
@@ -104,7 +104,7 @@ Start again `docker compose --env-file config.env up -d --build`
 
 ______________________________________________
 
-`docker compose -f --env-file config.env up -d --build`
+`docker compose --env-file config.env -f docker-compose.yaml up -d`
 
 ### API
 
