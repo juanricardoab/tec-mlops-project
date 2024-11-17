@@ -46,7 +46,7 @@ class BikeSharingModel:
         self.dependent_variable = ["cnt"]
         self.X_train, self.X_test, self.y_train, self.y_test = [None] * 4
 
-    def load_data(self, image_path='./data/processed/'):
+    def load_data(self, image_path='./app/data/processed/'):
         bike_sharing = fetch_ucirepo(id=self.fileNumber)
         self.bike_sharing_df = bike_sharing.data.original
         DataExplorer.explore_data(self.bike_sharing_df)
@@ -54,9 +54,9 @@ class BikeSharingModel:
             self.bike_sharing_df, self.categorical_variables
         )
         DataExplorer.explore_data(self.data_cleaned)
-        DataExplorer.plot_histograms(self.data_cleaned, image_path)
-        DataExplorer.plot_distribution_graphs(self.data_cleaned, image_path)
-        DataExplorer.plot_correlation_matrix(self.data_cleaned, image_path)
+#        DataExplorer.plot_histograms(self.data_cleaned, image_path)
+        # DataExplorer.plot_distribution_graphs(self.data_cleaned, image_path)
+        # DataExplorer.plot_correlation_matrix(self.data_cleaned, image_path)
         return self
 
     def preprocess_data(self):
@@ -73,13 +73,14 @@ class BikeSharingModel:
         self.X = self.data_cleaned_oneHot.drop(columns=["cnt", "dteday"])
         self.y = self.data_cleaned_oneHot["cnt"]
         # save X and y to csv
-        self.X.to_csv("./data/processed/X.csv", index=False)
-        self.y.to_csv("./data/processed/y.csv", index=False)
+
+        self.X.to_csv("./app/data/processed/X.csv", index=False)
+        self.y.to_csv("./app/data/processed/y.csv", index=False)
         return self
 
     def train_model(self):
         self.X, self.y = load_x_y_data(
-            "./data/processed/X.csv", "./data/processed/y.csv"
+            "./app/data/processed/X.csv", "./app/data/processed/y.csv"
         )
         self.X, self.y = scale_x_y_data(self.X, self.y)
         self.X_train, self.X_test, self.y_train, self.y_test = split_data(
@@ -125,7 +126,7 @@ class BikeSharingModel:
     def train_and_log_model(self):
         model_name = self.model_type.capitalize() + "Regression"
         self.X, self.y = load_x_y_data(
-            "./data/processed/X.csv", "./data/processed/y.csv"
+            "./app/data/processed/X.csv", "./app/data/processed/y.csv"
         )
         self.X, self.y = scale_x_y_data(self.X, self.y)
         self.X_train, self.X_test, self.y_train, self.y_test = split_data(

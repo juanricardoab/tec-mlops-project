@@ -1,3 +1,4 @@
+import pickle
 from bikeSharingModel import BikeSharingModel
 import yaml
 import mlflow
@@ -26,7 +27,7 @@ def load_graphs():
 
 
 def main(fileNumber, model_type="linear"):
-    mlflow.set_tracking_uri("http://tracking_server:5000")
+    mlflow.set_tracking_uri("http://localhost:5020")
     mlflow.set_experiment(f"BikeSharingModel_{model_type.capitalize()}")
     images_path = "./data/processed/"
 
@@ -41,7 +42,8 @@ def main(fileNumber, model_type="linear"):
         log_model_scores(model)
         model.cross_validate_model()
         log_model_cv_scores(model)
-
+        with open("./app/models/model_final.pkl.joblib", "wb") as f:
+            pickle.dump(model, f)
         mlflow.sklearn.log_model(model.model, "model")
         load_graphs()
 
