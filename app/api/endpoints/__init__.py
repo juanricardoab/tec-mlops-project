@@ -1,1 +1,0 @@
-"Plates Endpoint: This endpoint is designed to receive a transformer plate image (JPG,JPEG,PNG) with a filesize less than 4 MB. The quality of the extraction of the attributes is directly proportional to the quality of the image (legible texts, direction perpendicular to the plate, good lighting). The attributes that cannot be captured from the texts are returned as null."
